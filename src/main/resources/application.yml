@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: mdc-demo
+server:
+  port: 8080

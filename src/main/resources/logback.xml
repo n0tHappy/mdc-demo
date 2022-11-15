@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false" scan="false">
+    <springProperty scope="context" name="app_name" source="spring.application.name" defaultValue="mdc-demo"/>
+    <property name="log.path" value="/tmp/tools/logs" />
+<!--    <property name="log.pattern"-->
+<!--              value="%d{yyyy-MM-dd HH:mm:ss.SSS}|%level|${PID:-}|%thread|${app_name:-}|%class.%method-%line|%msg%n"/>-->
+<!--    <property name="log.pattern" value="%d{yyyy-MM-dd HH:mm:ss} [%p] [%t] [%c.%method:%L] %msg%n" />-->
+    <property name="log.pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %X{traceId} %msg%n" />
+    <!-- Console log output -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- Log file debug output -->
+    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}/${app_name:-}.%d{yyyy-MM-dd}.info.log</fileNamePattern>
+            <maxHistory>90</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- Log file error output -->
+    <appender name="error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}/${app_name:-}.%d{yyyy-MM-dd}.error.log</fileNamePattern>
+            <maxHistory>90</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+    </appender>
+
+    <!-- Level: FATAL 0  ERROR 3  WARN 4  INFO 6  DEBUG 7 -->
+    <root level="INFO">
+        <appender-ref ref="console" />
+        <appender-ref ref="file" />
+        <appender-ref ref="error" />
+    </root>
+</configuration>
